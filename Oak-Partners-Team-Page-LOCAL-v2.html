@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oak Partners — Meet the Team (v3 Final Structure)</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --oak-deep: #1a2e1a;
+    --oak-dark: #2c4a2c;
+    --oak-mid: #4a7c59;
+    --oak-light: #6b9e7a;
+    --oak-pale: #e8f0ea;
+    --oak-cream: #f7f5f0;
+    --oak-warm: #d4c5a9;
+    --oak-gold: #b8976e;
+    --oak-text: #2d2d2d;
+    --oak-muted: #6b6b6b;
+    --oak-white: #ffffff;
+    --oak-border: rgba(0,0,0,0.07);
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'DM Sans', -apple-system, sans-serif;
+    --radius: 14px;
+    --shadow-md: 0 8px 30px rgba(0,0,0,0.07);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--sans); color: var(--oak-text); background: var(--oak-cream); -webkit-font-smoothing: antialiased; }
+
+  .wireframe-banner { background: var(--oak-deep); color: var(--oak-warm); text-align: center; padding: 12px 20px; font-size: 12px; letter-spacing: 0.5px; font-weight: 500; position: sticky; top: 0; z-index: 100; }
+
+  .nav { background: var(--oak-white); border-bottom: 1px solid var(--oak-border); padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--oak-dark); }
+  .nav-logo small { display: block; font-family: var(--sans); font-size: 10px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: var(--oak-muted); margin-top: 2px; }
+  .nav-links { display: flex; gap: 28px; font-size: 14px; font-weight: 500; }
+  .nav-links a { text-decoration: none; color: var(--oak-muted); transition: color 0.2s; }
+  .nav-links a.active { color: var(--oak-dark); font-weight: 600; }
+
+  .hero { background: linear-gradient(165deg, var(--oak-deep) 0%, var(--oak-dark) 50%, var(--oak-mid) 100%); padding: 72px 40px 80px; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -50%; left: -20%; width: 140%; height: 200%; background: radial-gradient(ellipse at 30% 50%, rgba(107,158,122,0.12) 0%, transparent 60%); }
+  .hero-overline { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--oak-warm); font-weight: 600; margin-bottom: 18px; opacity:0; animation: fadeUp .5s ease .1s forwards; }
+  .hero h1 { font-family: var(--serif); font-size: clamp(34px, 5vw, 52px); font-weight: 500; color: var(--oak-white); line-height: 1.15; max-width: 680px; margin: 0 auto 18px; opacity:0; animation: fadeUp .5s ease .2s forwards; }
+  .hero p { font-size: 16px; color: rgba(255,255,255,0.65); max-width: 540px; margin: 0 auto; line-height: 1.7; opacity:0; animation: fadeUp .5s ease .35s forwards; }
+
+  .trust-strip { display: flex; justify-content: center; gap: 48px; padding: 28px 40px; background: var(--oak-white); border-bottom: 1px solid var(--oak-border); flex-wrap: wrap; }
+  .trust-item { text-align: center; }
+  .trust-number { font-family: var(--serif); font-size: 30px; font-weight: 600; color: var(--oak-dark); }
+  .trust-label { font-size: 11px; color: var(--oak-muted); letter-spacing: 0.3px; margin-top: 3px; }
+
+  .controls-bar { max-width: 1240px; margin: 0 auto; padding: 36px 40px 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .view-toggle { display: flex; background: var(--oak-white); border: 1.5px solid var(--oak-border); border-radius: 10px; overflow: hidden; }
+  .view-btn { padding: 10px 20px; font-family: var(--sans); font-size: 13px; font-weight: 600; border: none; background: transparent; color: var(--oak-muted); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+  .view-btn:not(:last-child) { border-right: 1.5px solid var(--oak-border); }
+  .view-btn.active { background: var(--oak-dark); color: var(--oak-white); }
+  .view-btn:not(.active):hover { background: var(--oak-pale); color: var(--oak-dark); }
+  .view-btn svg { width: 16px; height: 16px; }
+
+  .search-box { position: relative; width: 280px; }
+  .search-box input { width: 100%; padding: 10px 16px 10px 38px; border: 1.5px solid var(--oak-border); border-radius: 10px; font-family: var(--sans); font-size: 14px; background: var(--oak-white); color: var(--oak-text); outline: none; transition: border-color 0.2s; }
+  .search-box input::placeholder { color: #aaa; }
+  .search-box input:focus { border-color: var(--oak-mid); }
+  .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #aaa; width: 16px; height: 16px; }
+
+  .office-pills { display: flex; gap: 8px; }
+  .pill { padding: 8px 18px; border: 1.5px solid var(--oak-border); border-radius: 100px; background: var(--oak-white); font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--oak-muted); cursor: pointer; transition: all 0.2s; }
+  .pill.active { background: var(--oak-dark); border-color: var(--oak-dark); color: var(--oak-white); }
+  .pill:not(.active):hover { border-color: var(--oak-mid); color: var(--oak-dark); }
+
+  .main { max-width: 1240px; margin: 0 auto; padding: 32px 40px 60px; }
+
+  /* Explainer */
+  .explainer { background: var(--oak-white); border: 1.5px solid var(--oak-border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 28px; display: flex; align-items: flex-start; gap: 14px; }
+  .explainer-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--oak-pale); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px; }
+  .explainer-text { font-size: 14px; color: var(--oak-muted); line-height: 1.6; }
+  .explainer-text strong { color: var(--oak-text); }
+
+  /* Team clusters */
+  .team-cluster { margin-bottom: 20px; background: var(--oak-white); border-radius: var(--radius); border: 1.5px solid var(--oak-border); overflow: hidden; transition: box-shadow 0.3s; }
+  .team-cluster:hover { box-shadow: var(--shadow-md); }
+  .cluster-header { display: flex; align-items: center; justify-content: space-between; padding: 22px 26px; cursor: pointer; user-select: none; transition: background 0.2s; }
+  .cluster-header:hover { background: rgba(0,0,0,0.01); }
+  .cluster-header-left { display: flex; align-items: center; gap: 14px; }
+  .cluster-team-badge { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: var(--sans); font-size: 12px; font-weight: 700; color: var(--oak-white); letter-spacing: 0.5px; flex-shrink: 0; }
+  .cluster-team-name { font-family: var(--serif); font-size: 23px; font-weight: 600; color: var(--oak-text); }
+  .cluster-team-meta { font-size: 13px; color: var(--oak-muted); margin-top: 2px; }
+  .cluster-toggle { width: 30px; height: 30px; border-radius: 8px; background: var(--oak-pale); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .cluster-toggle svg { width: 16px; height: 16px; color: var(--oak-dark); transition: transform 0.3s; }
+  .team-cluster.expanded .cluster-toggle svg { transform: rotate(180deg); }
+
+  .cluster-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+  .team-cluster.expanded .cluster-body { max-height: 3000px; }
+  .cluster-content { padding: 0 26px 24px; border-top: 1px solid var(--oak-border); }
+  .cluster-role-section { margin-top: 18px; }
+  .cluster-role-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--oak-mid); margin-bottom: 10px; }
+  .cluster-members { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+
+  .member-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 12px; background: var(--oak-cream); transition: all 0.2s; cursor: pointer; }
+  .member-row:hover { background: var(--oak-pale); transform: translateX(2px); }
+  .member-avatar { width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 14px; font-weight: 600; flex-shrink: 0; overflow: hidden; }
+
+  .member-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .card-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .member-avatar.advisor { background: linear-gradient(135deg, var(--oak-dark), var(--oak-mid)); color: var(--oak-white); }
+  .member-avatar.support { background: linear-gradient(135deg, var(--oak-pale), #c8d9cb); color: var(--oak-mid); }
+  .member-name { font-size: 14px; font-weight: 600; color: var(--oak-text); }
+  .member-title { font-size: 12px; color: var(--oak-muted); margin-top: 1px; }
+  .member-actions { margin-left: auto; display: flex; gap: 5px; opacity: 0; transition: opacity 0.2s; }
+  .member-row:hover .member-actions { opacity: 1; }
+  .action-btn { width: 28px; height: 28px; border-radius: 7px; border: none; background: var(--oak-white); color: var(--oak-mid); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; font-size: 13px; }
+  .action-btn:hover { background: var(--oak-dark); color: var(--oak-white); }
+
+  /* Section dividers */
+  .section-divider { display: flex; align-items: center; gap: 12px; margin: 40px 0 20px; }
+  .section-divider .line { flex: 1; height: 1px; background: var(--oak-border); }
+  .section-divider .label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--oak-muted); white-space: nowrap; }
+
+  /* Shared support */
+  .shared-support-section { margin-bottom: 32px; }
+  .shared-support-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+
+  /* Everyone view */
+  .everyone-view { display: grid; }
+  .everyone-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
+  .person-card { background: var(--oak-white); border-radius: var(--radius); overflow: hidden; border: 1.5px solid var(--oak-border); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; }
+  .person-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+  .card-photo { width: 100%; aspect-ratio: 4/5; background: linear-gradient(135deg, var(--oak-pale) 0%, #c8d9cb 100%); position: relative; display: flex; align-items: center; justify-content: center; }
+  .card-photo .initials { font-family: var(--serif); font-size: 38px; font-weight: 600; color: var(--oak-mid); opacity: 0.4; }
+  .card-team-tag { position: absolute; top: 10px; left: 10px; padding: 3px 9px; border-radius: 6px; background: rgba(26,46,26,0.75); backdrop-filter: blur(6px); font-size: 10px; font-weight: 700; color: var(--oak-white); letter-spacing: 0.5px; }
+  .card-info { padding: 14px 16px 16px; }
+  .card-name { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--oak-text); margin-bottom: 2px; }
+  .card-title { font-size: 11px; color: var(--oak-muted); font-weight: 500; margin-bottom: 10px; }
+  .card-ctas { display: flex; gap: 6px; }
+  .card-cta { padding: 6px 12px; border-radius: 7px; font-size: 11px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; font-family: var(--sans); transition: all 0.2s; }
+  .cta-primary { background: var(--oak-dark); color: var(--oak-white); }
+  .cta-primary:hover { background: var(--oak-mid); }
+  .cta-secondary { background: var(--oak-pale); color: var(--oak-dark); }
+  .cta-secondary:hover { background: var(--oak-warm); }
+
+  /* Locations */
+  .locations { background: var(--oak-white); padding: 52px 40px; }
+  .locations-inner { max-width: 1240px; margin: 0 auto; text-align: center; }
+  .locations-inner h2 { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--oak-dark); margin-bottom: 6px; }
+  .locations-inner > p { color: var(--oak-muted); font-size: 15px; margin-bottom: 24px; }
+  .locations-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; text-align: left; }
+  .loc-card { border: 1.5px solid var(--oak-border); border-radius: var(--radius); padding: 22px; transition: border-color 0.2s; }
+  .loc-card:hover { border-color: var(--oak-mid); }
+  .loc-name { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--oak-dark); margin-bottom: 6px; }
+  .loc-address { font-size: 13px; color: var(--oak-muted); line-height: 1.6; margin-bottom: 10px; }
+  .loc-link { font-size: 12px; font-weight: 600; color: var(--oak-mid); text-decoration: none; }
+
+  .footer-cta { background: linear-gradient(165deg, var(--oak-deep), var(--oak-dark)); padding: 52px 40px; text-align: center; }
+  .footer-cta h2 { font-family: var(--serif); font-size: clamp(24px, 4vw, 34px); font-weight: 500; color: var(--oak-white); margin-bottom: 12px; }
+  .footer-cta p { color: rgba(255,255,255,0.6); font-size: 15px; max-width: 460px; margin: 0 auto 22px; line-height: 1.6; }
+  .footer-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px; background: var(--oak-warm); color: var(--oak-deep); font-family: var(--sans); font-size: 14px; font-weight: 600; border-radius: 10px; border: none; cursor: pointer; transition: all 0.2s; }
+  .footer-btn:hover { background: var(--oak-white); transform: translateY(-2px); }
+
+  /* Modal */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(26,46,26,0.55); backdrop-filter: blur(8px); z-index: 200; align-items: center; justify-content: center; padding: 40px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--oak-white); border-radius: 16px; max-width: 620px; width: 100%; max-height: 82vh; overflow-y: auto; position: relative; animation: modalIn 0.3s ease; }
+  .modal-close { position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border-radius: 50%; background: rgba(0,0,0,0.05); border: none; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; color: var(--oak-muted); z-index: 1; }
+  .modal-close:hover { background: rgba(0,0,0,0.1); }
+  .modal-top { display: flex; gap: 22px; padding: 30px 30px 18px; align-items: flex-start; }
+  .modal-photo { width: 96px; height: 120px; border-radius: 10px; background: linear-gradient(135deg, var(--oak-pale), #c8d9cb); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .modal-photo .initials { font-family: var(--serif); font-size: 30px; font-weight: 600; color: var(--oak-mid); opacity: 0.4; }
+  .modal-name { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--oak-text); margin-bottom: 3px; }
+  .modal-title-text { font-size: 13px; color: var(--oak-muted); font-weight: 500; margin-bottom: 8px; }
+  .modal-team-badge { display: inline-flex; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.3px; }
+  .modal-creds { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+  .cred-tag { padding: 3px 8px; border-radius: 5px; background: var(--oak-cream); font-size: 10px; font-weight: 700; color: var(--oak-mid); }
+  .modal-body { padding: 0 30px 30px; }
+  .modal-bio { font-size: 14px; line-height: 1.7; color: var(--oak-text); margin-bottom: 18px; }
+  .modal-ctas { display: flex; gap: 10px; flex-wrap: wrap; }
+  .modal-cta { padding: 10px 20px; border-radius: 9px; font-size: 13px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; font-family: var(--sans); transition: all 0.2s; }
+
+  .no-results { text-align: center; padding: 60px 20px; color: var(--oak-muted); font-size: 15px; display: none; }
+  .no-results.visible { display: block; }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .controls-bar { flex-direction: column; align-items: stretch; }
+    .search-box { width: 100%; }
+    .view-toggle { width: 100%; }
+    .view-btn { flex: 1; justify-content: center; }
+    .office-pills { justify-content: center; }
+    .cluster-members, .shared-support-grid { grid-template-columns: 1fr; }
+    .member-actions { opacity: 1; }
+    .modal-top { flex-direction: column; gap: 14px; padding: 22px; }
+    .modal-body { padding: 0 22px 22px; }
+    .main { padding-left: 20px; padding-right: 20px; }
+  }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+  .team-cluster { opacity: 0; animation: fadeUp 0.4s ease forwards; }
+  .team-cluster:nth-child(1) { animation-delay: .05s; }
+  .team-cluster:nth-child(2) { animation-delay: .12s; }
+  .team-cluster:nth-child(3) { animation-delay: .19s; }
+  .team-cluster:nth-child(4) { animation-delay: .26s; }
+  .team-cluster:nth-child(5) { animation-delay: .33s; }
+  .team-cluster:nth-child(6) { animation-delay: .40s; }
+</style>
+</head>
+<body>
+
+<div class="wireframe-banner">WIREFRAME v3 — Accurate Team Structure — Oak Partners "Meet the Team"</div>
+
+<nav class="nav">
+  <div class="nav-logo">Oak Partners<small>Wealth &amp; Retirement Planning</small></div>
+  <div class="nav-links"><a href="#">Home</a><a href="#">About</a><a href="#" class="active">Team</a><a href="#">Services</a><a href="#">Insights</a><a href="#">Contact</a></div>
+</nav>
+
+<section class="hero">
+  <div class="hero-overline">Our People</div>
+  <h1>Meet the Team Behind Your Financial Future</h1>
+  <p>Collaborative advisory teams and independent advisors — united by a fiduciary commitment to put your goals first.</p>
+</section>
+
+<div class="trust-strip">
+  <div class="trust-item"><div class="trust-number">30+</div><div class="trust-label">Years of Service</div></div>
+  <div class="trust-item"><div class="trust-number">$1.6B+</div><div class="trust-label">Assets Under Advisement</div></div>
+  <div class="trust-item"><div class="trust-number">30+</div><div class="trust-label">Professionals</div></div>
+</div>
+
+<div class="controls-bar">
+  <div class="view-toggle">
+    <button class="view-btn active" data-view="teams">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+      By Team
+    </button>
+    <button class="view-btn" data-view="everyone">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Everyone
+    </button>
+  </div>
+  <div class="office-pills">
+    <button class="pill active" data-office="all">All Offices</button>
+    <button class="pill" data-office="crown-point">Crown Point</button>
+    <button class="pill" data-office="valparaiso">Valparaiso</button>
+  </div>
+  <div class="search-box">
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="searchInput" placeholder="Search by name...">
+  </div>
+</div>
+
+<section class="main">
+  <div class="team-view" id="teamView">
+
+    <div class="explainer">
+      <div class="explainer-icon">🌳</div>
+      <div class="explainer-text">
+        <strong>At Oak Partners, you work with a dedicated team.</strong> Each of our advisory teams brings together wealth advisors and client experience specialists who collaborate closely to serve your financial goals. Click any team below to meet its members.
+      </div>
+    </div>
+
+    <!-- ============ PMG ============ -->
+    <div class="team-cluster expanded" data-team="PMG" data-office="crown-point">
+      <div class="cluster-header" onclick="toggleCluster(this)">
+        <div class="cluster-header-left">
+          <div class="cluster-team-badge" style="background:linear-gradient(135deg,#0f513b,#155741)">PMG</div>
+          <div>
+            <div class="cluster-team-name">PMG</div>
+            <div class="cluster-team-meta">Crown Point · 4 Advisors, 5 Support</div>
+          </div>
+        </div>
+        <div class="cluster-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+      </div>
+      <div class="cluster-body">
+        <div class="cluster-content">
+          <div class="cluster-role-section">
+            <div class="cluster-role-label">Wealth Advisors</div>
+            <div class="cluster-members">
+              <div class="member-row" data-name="F. Marc Ruiz" data-title="Team Leader, Partner" data-team="PMG" onclick="openModal(this)">
+                <div class="member-avatar advisor">MR</div>
+                <div><div class="member-name">F. Marc Ruiz</div><div class="member-title">Team Leader, Partner</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Bridget Shoemaker" data-title="Wealth Advisor, Partner" data-team="PMG" onclick="openModal(this)">
+                <div class="member-avatar advisor">BS</div>
+                <div><div class="member-name">Bridget Shoemaker</div><div class="member-title">Wealth Advisor, Partner</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Clint Henry" data-title="Wealth Advisor, Partner" data-team="PMG" onclick="openModal(this)">
+                <div class="member-avatar advisor">CH</div>
+                <div><div class="member-name">Clint Henry</div><div class="member-title">Wealth Advisor, Partner</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Mike Marshall" data-title="Wealth Advisor" data-team="PMG" onclick="openModal(this)">
+                <div class="member-avatar advisor">MA</div>
+                <div><div class="member-name">Mike Marshall</div><div class="member-title">Wealth Advisor</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="cluster-role-section">
+            <div class="cluster-role-label">Client Experience</div>
+            <div class="cluster-members">
+              <div class="member-row" data-name="Jessica Dowell" data-title="Client Support Specialist" data-team="PMG" onclick="openModal(this)">
+                <div class="member-avatar support">JD</div>
+                <div><div class="member-name">Jessica Dowell</div><div class="member-title">Client Support Specialist</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Meghan Jackson" data-title="Associate" data-team="PMG" onclick="openModal(this)">
+                <div class="member-avatar support">ME</div>
+                <div><div class="member-name">Meghan Jackson</div><div class="member-title">Associate</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Jess Wotherspoon" data-title="Executive Assistant" data-team="PMG" onclick="openModal(this)">
+                <div class="member-avatar support">JW</div>
+                <div><div class="member-name">Jess Wotherspoon</div><div class="member-title">Executive Assistant</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Jonathan Zemaitis" data-title="Associate" data-team="PMG" onclick="openModal(this)">
+                <div class="member-avatar support">JO</div>
+                <div><div class="member-name">Jonathan Zemaitis</div><div class="member-title">Associate</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Isabella Kowalczyk" data-title="Associate" data-team="PMG" onclick="openModal(this)">
+                <div class="member-avatar support">IZ</div>
+                <div><div class="member-name">Isabella Kowalczyk</div><div class="member-title">Associate</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ WMG ============ -->
+    <div class="team-cluster expanded" data-team="WMG" data-office="crown-point">
+      <div class="cluster-header" onclick="toggleCluster(this)">
+        <div class="cluster-header-left">
+          <div class="cluster-team-badge" style="background:linear-gradient(135deg,#247757,#739c8a)">WMG</div>
+          <div>
+            <div class="cluster-team-name">WMG</div>
+            <div class="cluster-team-meta">Crown Point · 4 Advisors, 4 Support</div>
+          </div>
+        </div>
+        <div class="cluster-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+      </div>
+      <div class="cluster-body">
+        <div class="cluster-content">
+          <div class="cluster-role-section">
+            <div class="cluster-role-label">Wealth Advisors</div>
+            <div class="cluster-members">
+              <div class="member-row" data-name="Mario A. Ruiz" data-title="Wealth Advisor" data-team="WMG" onclick="openModal(this)">
+                <div class="member-avatar advisor">MR</div>
+                <div><div class="member-name">Mario A. Ruiz</div><div class="member-title">Wealth Advisor</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Jason Urbaniak" data-title="Wealth Advisor" data-team="WMG" onclick="openModal(this)">
+                <div class="member-avatar advisor">JU</div>
+                <div><div class="member-name">Jason Urbaniak</div><div class="member-title">Wealth Advisor</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Ean Johnston" data-title="Wealth Advisor" data-team="WMG" onclick="openModal(this)">
+                <div class="member-avatar advisor">EJ</div>
+                <div><div class="member-name">Ean Johnston</div><div class="member-title">Wealth Advisor</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Steve Kavois" data-title="Wealth Advisor" data-team="WMG" onclick="openModal(this)">
+                <div class="member-avatar advisor">SK</div>
+                <div><div class="member-name">Steve Kavois</div><div class="member-title">Wealth Advisor</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="cluster-role-section">
+            <div class="cluster-role-label">Client Experience</div>
+            <div class="cluster-members">
+              <div class="member-row" data-name="Aimee Cooper" data-title="Associate" data-team="WMG" onclick="openModal(this)">
+                <div class="member-avatar support">AI</div>
+                <div><div class="member-name">Aimee Cooper</div><div class="member-title">Associate</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Lacie LeMay" data-title="Scheduling Coordinator" data-team="WMG" onclick="openModal(this)">
+                <div class="member-avatar support">LA</div>
+                <div><div class="member-name">Lacie LeMay</div><div class="member-title">Scheduling Coordinator</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Brock Naaman" data-title="Associate" data-team="WMG" onclick="openModal(this)">
+                <div class="member-avatar support">BN</div>
+                <div><div class="member-name">Brock Naaman</div><div class="member-title">Associate</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Will" data-title="Associate" data-team="WMG" onclick="openModal(this)">
+                <div class="member-avatar support">WI</div>
+                <div><div class="member-name">Will</div><div class="member-title">Associate</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ RAM ============ -->
+    <div class="team-cluster expanded" data-team="RAM" data-office="crown-point">
+      <div class="cluster-header" onclick="toggleCluster(this)">
+        <div class="cluster-header-left">
+          <div class="cluster-team-badge" style="background:linear-gradient(135deg,#75af9e,#7da49a)">RAM</div>
+          <div>
+            <div class="cluster-team-name">RAM</div>
+            <div class="cluster-team-meta">Crown Point · 3 Advisors, 3 Support</div>
+          </div>
+        </div>
+        <div class="cluster-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+      </div>
+      <div class="cluster-body">
+        <div class="cluster-content">
+          <div class="cluster-role-section">
+            <div class="cluster-role-label">Wealth Advisors</div>
+            <div class="cluster-members">
+              <div class="member-row" data-name="Mike Barancyk" data-title="Partner, Wealth Advisor" data-team="RAM" onclick="openModal(this)">
+                <div class="member-avatar advisor">MB</div>
+                <div><div class="member-name">Mike Barancyk</div><div class="member-title">Partner, Wealth Advisor</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Jack DeHaven" data-title="Wealth Advisor" data-team="RAM" onclick="openModal(this)">
+                <div class="member-avatar advisor">JD</div>
+                <div><div class="member-name">Jack DeHaven</div><div class="member-title">Wealth Advisor</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Michael Barenie" data-title="Wealth Advisor" data-team="RAM" onclick="openModal(this)">
+                <div class="member-avatar advisor">MB</div>
+                <div><div class="member-name">Michael Barenie</div><div class="member-title">Wealth Advisor</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="cluster-role-section">
+            <div class="cluster-role-label">Client Experience</div>
+            <div class="cluster-members">
+              <div class="member-row" data-name="Sue" data-title="Executive Assistant" data-team="RAM" onclick="openModal(this)">
+                <div class="member-avatar support">SU</div>
+                <div><div class="member-name">Sue</div><div class="member-title">Executive Assistant</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Hannah Christy-Carter" data-title="Associate" data-team="RAM" onclick="openModal(this)">
+                <div class="member-avatar support">HA</div>
+                <div><div class="member-name">Hannah Christy-Carter</div><div class="member-title">Associate</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Brittany" data-title="Associate" data-team="RAM" onclick="openModal(this)">
+                <div class="member-avatar support">BR</div>
+                <div><div class="member-name">Brittany</div><div class="member-title">Associate</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ CMG ============ -->
+    <div class="team-cluster expanded" data-team="CMG" data-office="valparaiso">
+      <div class="cluster-header" onclick="toggleCluster(this)">
+        <div class="cluster-header-left">
+          <div class="cluster-team-badge" style="background:linear-gradient(135deg,#a9c4bd,#9eaaa7)">CMG</div>
+          <div>
+            <div class="cluster-team-name">CMG</div>
+            <div class="cluster-team-meta">Valparaiso · 2 Advisors, 3 Support</div>
+          </div>
+        </div>
+        <div class="cluster-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+      </div>
+      <div class="cluster-body">
+        <div class="cluster-content">
+          <div class="cluster-role-section">
+            <div class="cluster-role-label">Wealth Advisors</div>
+            <div class="cluster-members">
+              <div class="member-row" data-name="Mike Hadt" data-title="Wealth Advisor, Partner" data-team="CMG" onclick="openModal(this)">
+                <div class="member-avatar advisor">MH</div>
+                <div><div class="member-name">Mike Hadt</div><div class="member-title">Wealth Advisor, Partner</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Jeff Hadt" data-title="Wealth Advisor" data-team="CMG" onclick="openModal(this)">
+                <div class="member-avatar advisor">JH</div>
+                <div><div class="member-name">Jeff Hadt</div><div class="member-title">Wealth Advisor</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="cluster-role-section">
+            <div class="cluster-role-label">Client Experience</div>
+            <div class="cluster-members">
+              <div class="member-row" data-name="Cindy Stewart" data-title="Client Relationship Manager" data-team="CMG" onclick="openModal(this)">
+                <div class="member-avatar support">CS</div>
+                <div><div class="member-name">Cindy Stewart</div><div class="member-title">Client Relationship Manager</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Morgan Ericksen" data-title="Executive Assistant" data-team="CMG" onclick="openModal(this)">
+                <div class="member-avatar support">ME</div>
+                <div><div class="member-name">Morgan Ericksen</div><div class="member-title">Executive Assistant</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Diana Soria" data-title="Executive Assistant" data-team="CMG" onclick="openModal(this)">
+                <div class="member-avatar support">DR</div>
+                <div><div class="member-name">Diana Soria</div><div class="member-title">Executive Assistant</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ FARGO ============ -->
+    <div class="team-cluster expanded" data-team="Fargo" data-office="crown-point">
+      <div class="cluster-header" onclick="toggleCluster(this)">
+        <div class="cluster-header-left">
+          <div class="cluster-team-badge" style="background:linear-gradient(135deg,#d6d5d5,#9f9e9e)">FARGO</div>
+          <div>
+            <div class="cluster-team-name">Team Fargo</div>
+            <div class="cluster-team-meta">Crown Point · 2 Advisors</div>
+          </div>
+        </div>
+        <div class="cluster-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+      </div>
+      <div class="cluster-body">
+        <div class="cluster-content">
+          <div class="cluster-role-section">
+            <div class="cluster-role-label">Wealth Advisors</div>
+            <div class="cluster-members">
+              <div class="member-row" data-name="Stacey Fargo" data-title="Wealth Advisor" data-team="Fargo" onclick="openModal(this)">
+                <div class="member-avatar advisor">ST</div>
+                <div><div class="member-name">Stacey Fargo</div><div class="member-title">Wealth Advisor</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+              <div class="member-row" data-name="Stephanie Hescher" data-title="Wealth Advisor" data-team="Fargo" onclick="openModal(this)">
+                <div class="member-avatar advisor">ST</div>
+                <div><div class="member-name">Stephanie Hescher</div><div class="member-title">Wealth Advisor</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ VERA ============ -->
+    <div class="team-cluster" data-team="Vera" data-office="crown-point">
+      <div class="cluster-header" onclick="toggleCluster(this)">
+        <div class="cluster-header-left">
+          <div class="cluster-team-badge" style="background:linear-gradient(135deg,#7b7c7c,#575657)">VERA</div>
+          <div>
+            <div class="cluster-team-name">Team Vera</div>
+            <div class="cluster-team-meta">St. John · 1 Advisor</div>
+          </div>
+        </div>
+        <div class="cluster-toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></div>
+      </div>
+      <div class="cluster-body">
+        <div class="cluster-content">
+          <div class="cluster-role-section">
+            <div class="cluster-role-label">Wealth Advisors</div>
+            <div class="cluster-members">
+              <div class="member-row" data-name="Mike Vera" data-title="Wealth Advisor" data-team="Vera" onclick="openModal(this)">
+                <div class="member-avatar advisor">MV</div>
+                <div><div class="member-name">Mike Vera</div><div class="member-title">Wealth Advisor</div></div>
+                <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ INDEPENDENT ADVISORS ============ -->
+    <div class="section-divider" id="indieHeader">
+      <div class="line"></div>
+      <div class="label">Independent Advisors</div>
+      <div class="line"></div>
+    </div>
+
+    <div class="team-cluster expanded" data-team="Independent" data-office="crown-point" style="border-color: transparent; background: transparent; box-shadow: none;">
+      <div class="cluster-body" style="max-height:3000px;">
+        <div class="cluster-content" style="border-top:none; padding: 0;">
+          <div class="cluster-members" style="margin-top:0;">
+            <div class="member-row" data-name="Adam K. Sipes" data-title="Wealth Advisor" data-team="Independent" onclick="openModal(this)">
+              <div class="member-avatar advisor">AS</div>
+              <div><div class="member-name">Adam K. Sipes</div><div class="member-title">Wealth Advisor</div></div>
+              <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+            </div>
+            <div class="member-row" data-name="David Ray" data-title="Wealth Advisor" data-team="Independent" onclick="openModal(this)">
+              <div class="member-avatar advisor">DR</div>
+              <div><div class="member-name">David Ray</div><div class="member-title">Wealth Advisor</div></div>
+              <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+            </div>
+            <div class="member-row" data-name="Ford Luken" data-title="Wealth Advisor" data-team="Independent" onclick="openModal(this)">
+              <div class="member-avatar advisor">FL</div>
+              <div><div class="member-name">Ford Luken</div><div class="member-title">Wealth Advisor</div></div>
+              <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SHARED OPERATIONS ============ -->
+    <div class="section-divider" id="opsHeader">
+      <div class="line"></div>
+      <div class="label">Firm Operations</div>
+      <div class="line"></div>
+    </div>
+
+    <div class="shared-support-section">
+      <div class="shared-support-grid">
+        <div class="member-row" data-name="Crystal DeHaven" data-title="Director of Client Experience" data-team="Operations" onclick="openModal(this)">
+          <div class="member-avatar support">CD</div>
+          <div><div class="member-name">Crystal DeHaven</div><div class="member-title">Director of Client Experience</div></div>
+          <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+        </div>
+        <div class="member-row" data-name="Caitlin Alwine" data-title="Operations" data-team="Operations" onclick="openModal(this)">
+          <div class="member-avatar support">CA</div>
+          <div><div class="member-name">Caitlin Alwine</div><div class="member-title">Operations</div></div>
+          <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+        </div>
+        <div class="member-row" data-name="Makaylah Camarillo" data-title="Operations" data-team="Operations" onclick="openModal(this)">
+          <div class="member-avatar support">MA</div>
+          <div><div class="member-name">Makaylah Camarillo</div><div class="member-title">Operations</div></div>
+          <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+        </div>
+        <div class="member-row" data-name="Maya Guernsey" data-title="Operations" data-team="Operations" onclick="openModal(this)">
+          <div class="member-avatar support">MY</div>
+          <div><div class="member-name">Maya Guernsey</div><div class="member-title">Operations</div></div>
+          <div class="member-actions"><button class="action-btn" title="Email">✉</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-results" id="noResultsTeam">No team members match your search.</div>
+  </div>
+
+  <!-- EVERYONE VIEW -->
+  <div class="everyone-view" id="everyoneView">
+    <div class="everyone-grid" id="everyoneGrid"></div>
+    <div class="no-results" id="noResultsEveryone">No team members match your search.</div>
+  </div>
+</section>
+
+<section class="locations">
+  <div class="locations-inner">
+    <h2>Our Offices</h2>
+    <p>Serving Northwest Indiana from two locations.</p>
+    <div class="locations-grid">
+      <div class="loc-card"><div class="loc-name">Crown Point</div><div class="loc-address">10010 Broadway<br>Crown Point, IN 46307</div><a class="loc-link" href="#">Get Directions →</a></div>
+      <div class="loc-card"><div class="loc-name">Valparaiso</div><div class="loc-address">350 Morthland Drive<br>Valparaiso, IN 46383</div><a class="loc-link" href="#">Get Directions →</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="footer-cta">
+  <h2>Ready to Start a Conversation?</h2>
+  <p>Whether you're building wealth, planning for retirement, or protecting your family's future — we're here.</p>
+  <button class="footer-btn">Schedule a Consultation →</button>
+</section>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="bioModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-top">
+      <div class="modal-photo"><span class="initials" id="mInitials"></span></div>
+      <div>
+        <div class="modal-name" id="mName"></div>
+        <div class="modal-title-text" id="mTitle"></div>
+        <div class="modal-team-badge" id="mTeam"></div>
+        <div class="modal-creds" id="mCreds"></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-bio" id="mBio"></div>
+      <div class="modal-ctas">
+        
+        <button class="modal-cta cta-secondary">Send Email</button>
+        <button class="modal-cta cta-secondary">Full Bio Page →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PLACEHOLDER_PHOTO = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 300'%3E%3Crect fill='%23c8d4cc' width='240' height='300'/%3E%3Ccircle cx='120' cy='100' r='35' fill='%23a8b8ae'/%3E%3Cellipse cx='120' cy='220' rx='65' ry='80' fill='%23a8b8ae'/%3E%3C/svg%3E";
+
+// === EMBEDDED PHOTOS ===
+const PHOTOS = {
+  "Adam_Sipes": "images/Adam Sipes.jpg",
+  "Aimee_Cooper": "images/Aimee Cooper.jpg",
+  "Bridget_Shoemaker": "images/Bridget Shoemaker.jpg",
+  "Brock_Naaman": "images/Brock Naaman.jpg",
+  "Caitlin_Alwine": "images/Caitlin Alwine.jpg",
+  "Cindy_Stewart": "images/Cindy Stewart.jpg",
+  "Clint_Henry": "images/Clint Henry.jpg",
+  "Crystal_DeHaven": "images/Crystal DeHaven.jpg",
+  "David_Ray": "images/David Ray.jpg",
+  "Diana_Soria": "images/Diana Soria.jpg",
+  "Diana_Remboski": "images/Diana Remboski.jpg",
+  "Ean_Johnston": "images/Ean Johnston.jpg",
+  "Ford_Luken": "images/Ford Luken.jpg",
+  "Hannah_Christy-Carter": "images/Hannah Christy-Carter.jpg",
+  "Isabella_Kowalczyk": "images/Isabella Kowalczyk.jpg",
+  "Jack_DeHaven": "images/Jack DeHaven.jpg",
+  "Jason_Urbaniak": "images/Jason Urbaniak.jpg",
+  "Jeff_Hadt": "images/Jeff Hadt.jpg",
+  "Jess_Wotherspoon": "images/Jess Wotherspoon.jpg",
+  "Jessica_Dowell": "images/Jessica Dowell.jpg",
+  "Jonathan_Zemaitis": "images/Jonathan Zemaitis.jpg",
+  "Lacie_LeMay": "images/Lacie LeMay.jpg",
+  "Makaylah_Camarillo": "images/Makaylah Camarillo.jpg",
+  "Marc_Ruiz": "images/Marc Ruiz.jpg",
+  "Mario_Ruiz": "images/Mario Ruiz.jpg",
+  "Maya_Guernsey": "images/Maya Guernsey.jpg",
+  "Meghan_Jackson": "images/Meghan Jackson.jpg",
+  "Michael_Barenie": "images/Michael Barenie.jpg",
+  "Michael_Vera": "images/Michael Vera.jpg",
+  "Mike_Barancyk": "images/Mike Barancyk.jpg",
+  "Mike_Hadt": "images/Mike Hadt.jpg",
+  "Mike_Marshall": "images/Mike Marshall.jpg",
+  "Morgan": "images/Morgan.jpg",
+  "Shane_Crist": "images/Shane Crist.jpg",
+  "Stacey_Fargo": "images/Stacey Fargo.jpg",
+  "Stephanie_Hescher": "images/Stephanie Hescher.jpg",
+  "Steve_Kavois": "images/Steve Kavois.jpg",
+};
+
+// === VIEW TOGGLE ===
+const viewBtns = document.querySelectorAll('.view-btn');
+const teamView = document.getElementById('teamView');
+const everyoneView = document.getElementById('everyoneView');
+let currentView = 'teams';
+
+viewBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    viewBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentView = btn.dataset.view;
+    teamView.style.display = currentView === 'teams' ? '' : 'none';
+    everyoneView.style.display = currentView === 'everyone' ? '' : 'none';
+    if (currentView === 'everyone') buildEveryoneGrid();
+    applyFilters();
+  });
+});
+
+// Photo lookup: name key -> photo file key
+const PHOTO_MAP = {
+  'Adam K. Sipes': 'Adam_Sipes',
+  'Aimee Cooper': 'Aimee_Cooper',
+  'Bridget Shoemaker': 'Bridget_Shoemaker',
+  'Brittany': null,
+  'Brock Naaman': 'Brock_Naaman',
+  'Caitlin Alwine': 'Caitlin_Alwine',
+  'Cindy Stewart': 'Cindy_Stewart',
+  'Clint Henry': 'Clint_Henry',
+  'Crystal DeHaven': 'Crystal_DeHaven',
+  'David Ray': 'David_Ray',
+  'Diana Soria': 'Diana_Soria',
+  'Ean Johnston': 'Ean_Johnston',
+  'F. Marc Ruiz': 'Marc_Ruiz',
+  'Ford Luken': 'Ford_Luken',
+  'Hannah Christy-Carter': 'Hannah_Christy-Carter',
+  'Isabella Kowalczyk': 'Isabella_Kowalczyk',
+  'Jack DeHaven': 'Jack_DeHaven',
+  'Jason Urbaniak': 'Jason_Urbaniak',
+  'Jeff Hadt': 'Jeff_Hadt',
+  'Jess Wotherspoon': 'Jess_Wotherspoon',
+  'Jessica Dowell': 'Jessica_Dowell',
+  'Jonathan Zemaitis': 'Jonathan_Zemaitis',
+  'Lacie LeMay': 'Lacie_LeMay',
+  'Makaylah Camarillo': 'Makaylah_Camarillo',
+  'Mario A. Ruiz': 'Mario_Ruiz',
+  'Maya Guernsey': 'Maya_Guernsey',
+  'Meghan Jackson': 'Meghan_Jackson',
+  'Michael Barenie': 'Michael_Barenie',
+  'Mike Barancyk': 'Mike_Barancyk',
+  'Mike Hadt': 'Mike_Hadt',
+  'Mike Marshall': 'Mike_Marshall',
+  'Mike Vera': 'Michael_Vera',
+  'Morgan Ericksen': 'Morgan',
+  'Shane Crist': 'Shane_Crist',
+  'Stacey Fargo': 'Stacey_Fargo',
+  'Stephanie Hescher': 'Stephanie_Hescher',
+  'Steve Kavois': 'Steve_Kavois',
+  'Sue': null,
+  'Will': null,
+};
+
+const BADGE_COLORS = { PMG:'#1a3a1a', WMG:'#2c5a2c', RAM:'#4a7c59', CMG:'#9aaa9a', Fargo:'#888', Vera:'#555', Independent:'#b8976e', Operations:'#999' };
+
+function getLastName(fullName) {
+  const parts = fullName.trim().split(/\s+/);
+  return parts[parts.length - 1].toLowerCase();
+}
+
+// Build everyone grid from member rows - sorted by last name
+function buildEveryoneGrid() {
+  const grid = document.getElementById('everyoneGrid');
+  if (grid.children.length > 0) return;
+  const members = [];
+  document.querySelectorAll('.member-row').forEach(el => {
+    members.push({
+      name: el.dataset.name,
+      title: el.dataset.title,
+      team: el.dataset.team,
+      office: el.closest('[data-office]')?.dataset.office || 'crown-point',
+      initials: el.querySelector('.member-avatar').textContent.trim(),
+      photoKey: PHOTO_MAP[el.dataset.name] || null,
+    });
+  });
+  // Sort by last name
+  members.sort((a, b) => getLastName(a.name).localeCompare(getLastName(b.name)));
+  
+  members.forEach(m => {
+    const card = document.createElement('div');
+    card.className = 'person-card';
+    card.dataset.name = m.name;
+    card.dataset.team = m.team;
+    card.dataset.office = m.office;
+    const photoSrc = (m.photoKey && typeof PHOTOS !== 'undefined' && PHOTOS[m.photoKey]) 
+      ? PHOTOS[m.photoKey] 
+      : PLACEHOLDER_PHOTO;
+    const photoHTML = `<img src="${photoSrc}" alt="${m.name}">`;
+    card.onclick = () => openModalData(m);
+    card.innerHTML = `
+      <div class="card-photo">
+        ${photoHTML}
+        <div class="card-team-tag" style="background:${BADGE_COLORS[m.team] || 'rgba(26,46,26,0.75)'}">${m.team}</div>
+      </div>
+      <div class="card-info">
+        <div class="card-name">${m.name}</div>
+        <div class="card-title">${m.title}</div>
+        <div class="card-ctas">
+          <button class="card-cta cta-primary" onclick="event.stopPropagation()">Profile →</button>
+          <button class="card-cta cta-secondary" onclick="event.stopPropagation()">Email</button>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+// === OFFICE FILTER ===
+const officePills = document.querySelectorAll('.pill');
+let activeOffice = 'all';
+officePills.forEach(pill => {
+  pill.addEventListener('click', () => {
+    officePills.forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    activeOffice = pill.dataset.office;
+    applyFilters();
+  });
+});
+
+// === SEARCH ===
+document.getElementById('searchInput').addEventListener('input', () => applyFilters());
+
+function applyFilters() {
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+  if (currentView === 'teams') {
+    const clusters = document.querySelectorAll('.team-cluster');
+    let anyVisible = false;
+    clusters.forEach(cluster => {
+      const officeMatch = activeOffice === 'all' || cluster.dataset.office === activeOffice;
+      const members = cluster.querySelectorAll('.member-row');
+      let hasMatch = false;
+      members.forEach(m => {
+        const nameMatch = !query || m.dataset.name.toLowerCase().includes(query);
+        m.style.display = nameMatch ? '' : 'none';
+        if (nameMatch) hasMatch = true;
+      });
+      const show = officeMatch && hasMatch;
+      cluster.style.display = show ? '' : 'none';
+      if (show) anyVisible = true;
+      if (query && show && !cluster.classList.contains('expanded')) cluster.classList.add('expanded');
+    });
+
+    // Shared ops
+    const opsMembers = document.querySelectorAll('.shared-support-grid .member-row');
+    let opsVisible = false;
+    opsMembers.forEach(m => {
+      const nameMatch = !query || m.dataset.name.toLowerCase().includes(query);
+      m.style.display = nameMatch ? '' : 'none';
+      if (nameMatch) opsVisible = true;
+    });
+    document.getElementById('opsHeader').style.display = opsVisible ? '' : 'none';
+    document.querySelector('.shared-support-section').style.display = opsVisible ? '' : 'none';
+
+    // Indie header
+    const indieCluster = document.querySelector('[data-team="Independent"]');
+    document.getElementById('indieHeader').style.display = indieCluster.style.display;
+
+    document.getElementById('noResultsTeam').classList.toggle('visible', !anyVisible && !opsVisible);
+  } else {
+    const cards = document.querySelectorAll('.person-card');
+    let anyVisible = false;
+    cards.forEach(card => {
+      const officeMatch = activeOffice === 'all' || card.dataset.office === activeOffice;
+      const nameMatch = !query || card.dataset.name.toLowerCase().includes(query);
+      const show = officeMatch && nameMatch;
+      card.style.display = show ? '' : 'none';
+      if (show) anyVisible = true;
+    });
+    document.getElementById('noResultsEveryone').classList.toggle('visible', !anyVisible);
+  }
+}
+
+function toggleCluster(header) { header.closest('.team-cluster').classList.toggle('expanded'); }
+
+// === MODAL ===
+function openModal(el) {
+  openModalData({
+    name: el.dataset.name,
+    title: el.dataset.title,
+    team: el.dataset.team,
+    initials: el.querySelector('.member-avatar').textContent.trim()
+  });
+}
+
+function openModalData(m) {
+  document.getElementById('mName').textContent = m.name;
+  document.getElementById('mTitle').textContent = m.title;
+  document.getElementById('mInitials').textContent = m.initials;
+  const badge = document.getElementById('mTeam');
+  badge.textContent = m.team === 'Independent' ? 'Independent Advisor' : m.team === 'Operations' ? 'Firm Operations' : m.team + ' Team';
+  const badgeColors = { PMG:'#e3ebe3', WMG:'#e5efe5', RAM:'#e8f0ea', CMG:'#eef1ef', Fargo:'#f0f0f0', Vera:'#ebebeb', Independent:'#faf3e8', Operations:'#f5f5f5' };
+  const badgeTextColors = { PMG:'#1a3a1a', WMG:'#2c5a2c', RAM:'#4a7c59', CMG:'#6a7a6a', Fargo:'#888', Vera:'#555', Independent:'#b8976e', Operations:'#666' };
+  badge.style.background = badgeColors[m.team] || '#e8f0ea';
+  badge.style.color = badgeTextColors[m.team] || '#2c4a2c';
+
+  const creds = document.getElementById('mCreds');
+  creds.innerHTML = '';
+  if (m.title.includes('Advisor') || m.title.includes('Partner')) {
+    ['CFP®', 'Series 7', 'Series 66'].forEach(c => { creds.innerHTML += `<span class="cred-tag">${c}</span>`; });
+  }
+
+  document.getElementById('mBio').textContent = `Placeholder bio for ${m.name}. In the live version, this would include professional background, specializations, credentials, years of experience, and a personal note. Their team (${m.team}) works collaboratively to ensure clients have depth of support behind their primary advisor relationship.`;
+
+  document.getElementById('bioModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() { document.getElementById('bioModal').classList.remove('open'); document.body.style.overflow = ''; }
+document.getElementById('bioModal').addEventListener('click', e => { if (e.target.id === 'bioModal') closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// === REPLACE TEAM VIEW INITIALS WITH PLACEHOLDER PHOTOS ===
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.member-avatar').forEach(av => {
+    const name = av.closest('.member-row')?.dataset.name;
+    const photoKey = PHOTO_MAP[name];
+    const src = (photoKey && PHOTOS[photoKey]) ? PHOTOS[photoKey] : PLACEHOLDER_PHOTO;
+    av.innerHTML = `<img src="${src}" alt="${name || ''}">`;
+  });
+});
+</script>
+
+</body>
+</html>
