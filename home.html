@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Work Dashboard</title>
+  <style>
+    :root{
+      --bg:#0b1220; --card:#111b2e; --text:#e7eefc; --muted:#a9b7d0;
+      --border:#1f2a44; --accent:#6aa3ff; --good:#86efac; --warn:#fbbf24;
+      --bad:#fb7185; --shadow: 0 12px 40px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
+    header{position:sticky;top:0;background:rgba(11,18,32,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);z-index:5}
+    .wrap{max-width:1180px;margin:0 auto;padding:18px}
+    .topline{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap}
+    h1{margin:0;font-size:18px;letter-spacing:.2px}
+    .sub{color:var(--muted);font-size:12px;margin-top:4px}
+    .searchRow{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:14px}
+    input[type="text"], input[type="number"], select{
+      padding:12px 12px;border-radius:12px;border:1px solid var(--border);
+      background:#0f1930;color:var(--text);outline:none
+    }
+    input[type="text"]{flex:1;min-width:260px}
+    input:focus, select:focus{border-color:var(--accent)}
+    .pill{padding:8px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:12px}
+    .btn{
+      border:1px solid var(--border); background:#0f1930; color:var(--text);
+      padding:10px 12px; border-radius:12px; cursor:pointer;
+    }
+    .btn:hover{border-color:var(--accent)}
+    main{max-width:1180px;margin:0 auto;padding:18px;display:grid;grid-template-columns: 1.3fr .7fr;gap:14px}
+    @media (max-width: 980px){ main{grid-template-columns:1fr} }
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;align-content:start}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
+    .card h2{margin:0 0 10px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .h2meta{font-size:12px;color:var(--muted);text-transform:none;letter-spacing:0}
+    a.link{
+      display:block;text-decoration:none;color:var(--text);
+      padding:10px 10px;border-radius:12px;border:1px solid transparent
+    }
+    a.link:hover{background:#0f1930;border-color:var(--border)}
+    a.link.active{outline:2px solid var(--accent); background:#0f1930}
+    .meta{color:var(--muted);font-size:12px;margin-top:2px}
+    .hidden{display:none !important}
+    .twoCol{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .kpi{padding:10px;border:1px solid var(--border);border-radius:14px;background:#0f1930}
+    .kpi .label{color:var(--muted);font-size:12px}
+    .kpi .value{font-size:16px;margin-top:6px}
+    .kpi .value small{color:var(--muted);font-size:12px}
+    .mini{font-size:12px;color:var(--muted)}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .row > *{flex:1}
+    .row .tight{flex:0 0 auto}
+    .divider{height:1px;background:var(--border);margin:10px 0}
+    .note{font-size:12px;color:var(--muted);line-height:1.35}
+    .tag{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid var(--border);color:var(--muted);font-size:12px;margin-left:8px}
+    .badgeGood{color:var(--good)}
+    .badgeWarn{color:var(--warn)}
+    .badgeBad{color:var(--bad)}
+    textarea{
+      width:100%; min-height:110px; resize:vertical;
+      padding:12px 12px;border-radius:12px;border:1px solid var(--border);
+      background:#0f1930;color:var(--text);outline:none
+    }
+    footer{max-width:1180px;margin:0 auto;padding:0 18px 18px 18px;color:var(--muted);font-size:12px}
+    code{background:#0f1930;border:1px solid var(--border);padding:2px 6px;border-radius:8px}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="topline">
+      <div>
+        <h1>Work Dashboard</h1>
+        <div class="sub">Press <code>/</code> to search • <code>Enter</code> opens the top result • <code>Esc</code> clears</div>
+      </div>
+      <div class="pill" id="statsPill">0 links</div>
+    </div>
+
+    <div class="searchRow">
+      <input id="q" type="text" placeholder='Search (e.g., "RMD", "DocuSign", "IRS", "LPL")…' autocomplete="off" />
+      <button class="btn" id="clearBtn" title="Clear search (Esc)">Clear</button>
+      <button class="btn" id="toggleConfigBtn" title="Show/hide your links config">Config</button>
+    </div>
+
+    <div id="configPanel" class="card hidden" style="margin-top:14px">
+      <h2>Links config <span class="h2meta">Edit the JSON → page re-renders instantly</span></h2>
+      <textarea id="configEditor" spellcheck="false"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="btn tight" id="applyConfigBtn">Apply</button>
+        <button class="btn tight" id="resetConfigBtn">Reset to defaults</button>
+        <div class="note">
+          Tip: add extra tags in <code>tags</code> so search hits what you expect (e.g., "ira", "secure act", "withholding").
+        </div>
+      </div>
+      <div class="note" id="configStatus" style="margin-top:8px"></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- LEFT: LINKS -->
+  <section class="grid" id="cards"></section>
+
+  <!-- RIGHT: QUICK MATH + NOTES -->
+  <aside class="grid">
+    <section class="card">
+      <h2>Quick Math <span class="h2meta">Internal sanity checks</span></h2>
+
+      <div class="twoCol">
+        <div class="kpi">
+          <div class="label">Annual fee from AUM × bps</div>
+          <div class="row" style="margin-top:8px">
+            <input id="aum1" type="number" step="0.01" placeholder="AUM ($)" />
+            <input id="bps1" type="number" step="0.01" placeholder="bps" />
+          </div>
+          <div class="value" id="out1">$0 <small>/ year</small></div>
+          <div class="mini" id="out1b">$0 / quarter • $0 / month</div>
+        </div>
+
+        <div class="kpi">
+          <div class="label">bps needed for target annual fee</div>
+          <div class="row" style="margin-top:8px">
+            <input id="aum2" type="number" step="0.01" placeholder="AUM ($)" />
+            <input id="fee2" type="number" step="0.01" placeholder="Target fee ($/yr)" />
+          </div>
+          <div class="value" id="out2">0 <small>bps</small></div>
+          <div class="mini">bps = fee ÷ AUM × 10,000</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="kpi">
+        <div class="label">Breakpoint ladder (tiered bps)</div>
+        <div class="note">Enter tiers. Example: 1.00% to $250k, 0.85% next $250k, 0.70% above $500k.</div>
+        <div class="row" style="margin-top:8px">
+          <input id="bpAum" type="number" step="0.01" placeholder="AUM ($)" />
+          <button class="btn tight" id="bpAddTierBtn">Add tier</button>
+        </div>
+
+        <div id="bpTiers" style="margin-top:10px;display:grid;gap:10px"></div>
+        <div class="value" style="margin-top:10px" id="bpOut">$0 <small>/ year</small></div>
+        <div class="mini" id="bpOut2">Effective bps: 0</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="kpi">
+        <div class="label">Federal marginal bracket helper (editable)</div>
+        <div class="row" style="margin-top:8px">
+          <select id="filing">
+            <option value="single">Single</option>
+            <option value="mfj">MFJ</option>
+            <option value="mfs">MFS</option>
+            <option value="hoh">HOH</option>
+          </select>
+          <input id="taxableIncome" type="number" step="1" placeholder="Taxable income ($)" />
+        </div>
+        <div class="value" id="bracketOut">—</div>
+        <div class="note">Uses 2024 ordinary income brackets; adjust in the script if you want 2025/2026.</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Scratchpad <span class="h2meta">Saved locally (this browser)</span></h2>
+      <textarea id="notes" placeholder="Meeting prep, phone numbers, quick bullets…"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="btn tight" id="saveNotesBtn">Save</button>
+        <button class="btn tight" id="clearNotesBtn">Clear</button>
+        <div class="note">This does not sync across devices unless you host it with a backend.</div>
+      </div>
+      <div class="note" id="notesStatus" style="margin-top:8px"></div>
+    </section>
+  </aside>
+</main>
+
+<footer>
+  Hosting: GitHub Pages or Cloudflare Pages. If you keep this internal, use an unlisted repo/project and avoid sensitive client data in notes.
+</footer>
+
+<script>
+/** ---------------------------
+ *  1) EDIT ONLY THIS DEFAULT_CONFIG
+ *  ---------------------------
+ *  - Sections render as cards
+ *  - Each link: title, url, desc, tags[]
+ *  - Add tags aggressively for search
+ */
+const DEFAULT_CONFIG = {
+  pinnedOrder: ["Pinned"],
+  sections: [
+    {
+      name: "Pinned",
+      links: [
+        { title: "Gmail", url: "https://mail.google.com/", desc: "Inbox", tags: ["email"] },
+        { title: "Google Calendar", url: "https://calendar.google.com/", desc: "Schedule", tags: ["calendar"] },
+        { title: "Google Drive", url: "https://drive.google.com/", desc: "Files", tags: ["drive","docs"] }
+      ]
+    },
+    {
+      name: "Calculators",
+      links: [
+        { title: "Amortization Calculator", url: "https://www.calculator.net/amortization-calculator.html", desc: "Mortgage / loan math", tags: ["mortgage","loan"] },
+        { title: "Retirement Calculator", url: "https://www.calculator.net/retirement-calculator.html", desc: "Quick scenarios", tags: ["retirement"] }
+      ]
+    },
+    {
+      name: "Reference",
+      links: [
+        { title: "IRS RMD Guidance", url: "https://www.irs.gov/retirement-plans/required-minimum-distributions", desc: "Official RMD rules", tags: ["rmd","ira","secure act","irs"] },
+        { title: "SSA", url: "https://www.ssa.gov/", desc: "Benefits info", tags: ["social security","ssa"] }
+      ]
+    },
+    {
+      name: "Client Ops",
+      links: [
+        { title: "DocuSign", url: "#", desc: "Replace with your portal link", tags: ["forms","esign"] },
+        { title: "Onboarding Tracker", url: "#", desc: "Replace with your tracker link", tags: ["tracker","status"] }
+      ]
+    }
+  ]
+};
+
+let appConfig = loadConfig() || structuredClone(DEFAULT_CONFIG);
+
+/** ---------------------------
+ *  2) RENDER LINKS
+ *  ---------------------------
+ */
+const cardsEl = document.getElementById("cards");
+const qEl = document.getElementById("q");
+const statsPill = document.getElementById("statsPill");
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+
+function allLinksFlat(){
+  const items = [];
+  for (const sec of appConfig.sections){
+    for (const link of (sec.links || [])){
+      items.push({ section: sec.name, ...link });
+    }
+  }
+  return items;
+}
+
+function render(){
+  cardsEl.innerHTML = "";
+
+  // order sections: pinned first if provided
+  const pinnedNames = new Set(appConfig.pinnedOrder || []);
+  const sections = [...appConfig.sections].sort((a,b)=>{
+    const ap = pinnedNames.has(a.name) ? 0 : 1;
+    const bp = pinnedNames.has(b.name) ? 0 : 1;
+    if (ap !== bp) return ap - bp;
+    return a.name.localeCompare(b.name);
+  });
+
+  for (const sec of sections){
+    const card = document.createElement("section");
+    card.className = "card";
+    card.dataset.section = sec.name;
+
+    const h2 = document.createElement("h2");
+    h2.innerHTML = `${escapeHtml(sec.name)} <span class="h2meta"><span class="tag">${(sec.links||[]).length} links</span></span>`;
+    card.appendChild(h2);
+
+    for (const l of (sec.links || [])){
+      const a = document.createElement("a");
+      a.className = "link";
+      a.href = l.url || "#";
+      a.target = "_blank";
+      a.rel = "noreferrer";
+      const tags = Array.isArray(l.tags) ? l.tags.join(" | ") : "";
+      a.dataset.search = `${sec.name} ${l.title||""} ${l.desc||""} ${tags}`.toLowerCase();
+
+      // prevent opening placeholder links
+      if (!l.url || l.url === "#"){
+        a.addEventListener("click", (e)=>{
+          e.preventDefault();
+          alert("Placeholder link. Open Config and paste the real URL.");
+        });
+      }
+
+      a.innerHTML = `${escapeHtml(l.title||"Untitled")}
+        <div class="meta">${escapeHtml(l.desc||"")}${tags ? " • " + escapeHtml(tags) : ""}</div>`;
+      card.appendChild(a);
+    }
+
+    cardsEl.appendChild(card);
+  }
+
+  const total = allLinksFlat().length;
+  statsPill.textContent = `${total} links`;
+  filter(); // apply current search
+}
+
+function visibleLinks(){
+  return Array.from(cardsEl.querySelectorAll('a.link:not(.hidden)'));
+}
+
+function clearActive(){
+  document.querySelectorAll("a.link.active").forEach(a=>a.classList.remove("active"));
+}
+
+function setActiveFirst(){
+  clearActive();
+  const v = visibleLinks();
+  if (v.length) v[0].classList.add("active");
+}
+
+function filter(){
+  const term = qEl.value.trim().toLowerCase();
+
+  // show all
+  Array.from(cardsEl.querySelectorAll("a.link")).forEach(a=>a.classList.remove("hidden"));
+  Array.from(cardsEl.querySelectorAll(".card")).forEach(c=>c.classList.remove("hidden"));
+
+  if (!term){
+    setActiveFirst();
+    return;
+  }
+
+  // hide non-matching links
+  Array.from(cardsEl.querySelectorAll("a.link")).forEach(a=>{
+    if (!a.dataset.search.includes(term)) a.classList.add("hidden");
+  });
+
+  // hide empty sections
+  Array.from(cardsEl.querySelectorAll(".card")).forEach(card=>{
+    const visibleCount = card.querySelectorAll("a.link:not(.hidden)").length;
+    if (!visibleCount) card.classList.add("hidden");
+  });
+
+  setActiveFirst();
+}
+
+qEl.addEventListener("input", filter);
+
+/** Keyboard shortcuts:
+ *  / focuses search
+ *  Esc clears
+ *  Enter opens active or first
+ *  ArrowDown/ArrowUp cycles visible links
+ */
+document.addEventListener("keydown", (e)=>{
+  const isTyping = ["INPUT","TEXTAREA","SELECT"].includes(document.activeElement?.tagName);
+  if (e.key === "/" && !isTyping){
+    e.preventDefault();
+    qEl.focus();
+    return;
+  }
+  if (e.key === "Escape"){
+    qEl.value = "";
+    filter();
+    return;
+  }
+  if (e.key === "Enter" && !isTyping){
+    const active = document.querySelector("a.link.active");
+    const target = active || visibleLinks()[0];
+    if (target){
+      target.click();
+    }
+    return;
+  }
+  if ((e.key === "ArrowDown" || e.key === "ArrowUp") && !isTyping){
+    e.preventDefault();
+    const v = visibleLinks();
+    if (!v.length) return;
+    const idx = v.findIndex(x=>x.classList.contains("active"));
+    let nextIdx = 0;
+    if (idx >= 0){
+      nextIdx = e.key === "ArrowDown" ? Math.min(idx+1, v.length-1) : Math.max(idx-1, 0);
+    }
+    clearActive();
+    v[nextIdx].classList.add("active");
+    v[nextIdx].scrollIntoView({block:"nearest"});
+  }
+});
+
+document.getElementById("clearBtn").addEventListener("click", ()=>{
+  qEl.value = "";
+  filter();
+  qEl.focus();
+});
+
+/** ---------------------------
+ *  3) CONFIG EDITOR (JSON)
+ *  ---------------------------
+ */
+const configPanel = document.getElementById("configPanel");
+const configEditor = document.getElementById("configEditor");
+const configStatus = document.getElementById("configStatus");
+
+function loadConfig(){
+  try{
+    const raw = localStorage.getItem("workDashboardConfig");
+    return raw ? JSON.parse(raw) : null;
+  }catch{ return null; }
+}
+function saveConfig(cfg){
+  localStorage.setItem("workDashboardConfig", JSON.stringify(cfg));
+}
+function showStatus(msg, ok=true){
+  configStatus.textContent = msg;
+  configStatus.className = "note " + (ok ? "badgeGood" : "badgeBad");
+}
+
+document.getElementById("toggleConfigBtn").addEventListener("click", ()=>{
+  configPanel.classList.toggle("hidden");
+  configEditor.value = JSON.stringify(appConfig, null, 2);
+});
+
+document.getElementById("applyConfigBtn").addEventListener("click", ()=>{
+  try{
+    const parsed = JSON.parse(configEditor.value);
+    // minimal validation
+    if (!parsed.sections || !Array.isArray(parsed.sections)) throw new Error("Config must include sections[]");
+    appConfig = parsed;
+    saveConfig(appConfig);
+    render();
+    showStatus("Config applied and saved locally.", true);
+  }catch(err){
+    showStatus("Config error: " + err.message, false);
+  }
+});
+
+document.getElementById("resetConfigBtn").addEventListener("click", ()=>{
+  appConfig = structuredClone(DEFAULT_CONFIG);
+  saveConfig(appConfig);
+  configEditor.value = JSON.stringify(appConfig, null, 2);
+  render();
+  showStatus("Reset to default config.", true);
+});
+
+/** ---------------------------
+ *  4) QUICK MATH
+ *  ---------------------------
+ */
+const fmtUSD = (n)=> {
+  const x = Number.isFinite(n) ? n : 0;
+  return x.toLocaleString(undefined, {style:"currency", currency:"USD", maximumFractionDigits:2});
+};
+const fmtBps = (n)=> {
+  const x = Number.isFinite(n) ? n : 0;
+  return x.toLocaleString(undefined, {maximumFractionDigits:2});
+};
+
+function calcFeeFromBps(aum, bps){
+  // fee = aum * (bps/10000)
+  return aum * (bps / 10000);
+}
+function calcBpsFromFee(aum, fee){
+  if (aum <= 0) return 0;
+  return (fee / aum) * 10000;
+}
+
+function wireFeeCalc(){
+  const aum = Number(document.getElementById("aum1").value || 0);
+  const bps = Number(document.getElementById("bps1").value || 0);
+  const fee = calcFeeFromBps(aum, bps);
+  document.getElementById("out1").innerHTML = `${fmtUSD(fee)} <small>/ year</small>`;
+  document.getElementById("out1b").textContent = `${fmtUSD(fee/4)} / quarter • ${fmtUSD(fee/12)} / month`;
+
+  const aum2 = Number(document.getElementById("aum2").value || 0);
+  const fee2 = Number(document.getElementById("fee2").value || 0);
+  const bpsNeed = calcBpsFromFee(aum2, fee2);
+  document.getElementById("out2").innerHTML = `${fmtBps(bpsNeed)} <small>bps</small>`;
+}
+["aum1","bps1","aum2","fee2"].forEach(id=>{
+  document.getElementById(id).addEventListener("input", wireFeeCalc);
+});
+
+/** Breakpoints */
+let bpTiers = loadBpTiers() || [
+  { cap: 250000, bps: 100 },   // to $250k
+  { cap: 500000, bps: 85 },    // to $500k (next $250k)
+  { cap: null,   bps: 70 }     // above
+];
+
+function loadBpTiers(){
+  try{
+    const raw = localStorage.getItem("workDashboardBpTiers");
+    return raw ? JSON.parse(raw) : null;
+  }catch{ return null; }
+}
+function saveBpTiers(){
+  localStorage.setItem("workDashboardBpTiers", JSON.stringify(bpTiers));
+}
+
+function renderBpTiers(){
+  const host = document.getElementById("bpTiers");
+  host.innerHTML = "";
+  bpTiers.forEach((t, idx)=>{
+    const row = document.createElement("div");
+    row.className = "row";
+
+    const cap = document.createElement("input");
+    cap.type = "number";
+    cap.step = "1";
+    cap.placeholder = idx === bpTiers.length-1 ? "Cap (blank = no cap)" : "Cap ($)";
+    cap.value = (t.cap ?? "");
+    cap.addEventListener("input", ()=>{
+      const v = cap.value === "" ? null : Number(cap.value);
+      bpTiers[idx].cap = (v !== null && v >= 0) ? v : null;
+      saveBpTiers();
+      calcBp();
+    });
+
+    const bps = document.createElement("input");
+    bps.type = "number";
+    bps.step = "0.01";
+    bps.placeholder = "bps";
+    bps.value = t.bps ?? 0;
+    bps.addEventListener("input", ()=>{
+      bpTiers[idx].bps = Number(bps.value || 0);
+      saveBpTiers();
+      calcBp();
+    });
+
+    const del = document.createElement("button");
+    del.className = "btn tight";
+    del.textContent = "Remove";
+    del.addEventListener("click", ()=>{
+      bpTiers.splice(idx, 1);
+      if (!bpTiers.length) bpTiers = [{cap:null,bps:0}];
+      saveBpTiers();
+      renderBpTiers();
+      calcBp();
+    });
+
+    row.appendChild(cap);
+    row.appendChild(bps);
+    row.appendChild(del);
+    host.appendChild(row);
+  });
+}
+
+document.getElementById("bpAddTierBtn").addEventListener("click", ()=>{
+  bpTiers.push({cap:null,bps:0});
+  saveBpTiers();
+  renderBpTiers();
+  calcBp();
+});
+
+document.getElementById("bpAum").addEventListener("input", calcBp);
+
+function calcBp(){
+  const aum = Number(document.getElementById("bpAum").value || 0);
+  let remaining = aum;
+  let fee = 0;
+  let lastCap = 0;
+
+  // normalize: treat tiers as ascending caps, with null at end
+  const tiers = bpTiers.map(t=>({cap: t.cap===null? null : Number(t.cap), bps: Number(t.bps||0)}))
+    .sort((a,b)=>{
+      if (a.cap === null) return 1;
+      if (b.cap === null) return -1;
+      return a.cap - b.cap;
+    });
+
+  for (const t of tiers){
+    if (remaining <= 0) break;
+    if (t.cap === null){
+      fee += calcFeeFromBps(remaining, t.bps);
+      remaining = 0;
+    }else{
+      const tierWidth = Math.max(0, t.cap - lastCap);
+      const alloc = Math.min(remaining, tierWidth);
+      fee += calcFeeFromBps(alloc, t.bps);
+      remaining -= alloc;
+      lastCap = t.cap;
+    }
+  }
+
+  const effBps = aum > 0 ? (fee / aum) * 10000 : 0;
+  document.getElementById("bpOut").innerHTML = `${fmtUSD(fee)} <small>/ year</small>`;
+  document.getElementById("bpOut2").textContent = `Effective bps: ${fmtBps(effBps)}`;
+}
+
+/** Bracket helper (2024 ordinary income brackets; editable) */
+const brackets2024 = {
+  single: [
+    { upTo: 11600, rate: 0.10 },
+    { upTo: 47150, rate: 0.12 },
+    { upTo: 100525, rate: 0.22 },
+    { upTo: 191950, rate: 0.24 },
+    { upTo: 243725, rate: 0.32 },
+    { upTo: 609350, rate: 0.35 },
+    { upTo: Infinity, rate: 0.37 }
+  ],
+  mfj: [
+    { upTo: 23200, rate: 0.10 },
+    { upTo: 94300, rate: 0.12 },
+    { upTo: 201050, rate: 0.22 },
+    { upTo: 383900, rate: 0.24 },
+    { upTo: 487450, rate: 0.32 },
+    { upTo: 731200, rate: 0.35 },
+    { upTo: Infinity, rate: 0.37 }
+  ],
+  mfs: [
+    { upTo: 11600, rate: 0.10 },
+    { upTo: 47150, rate: 0.12 },
+    { upTo: 100525, rate: 0.22 },
+    { upTo: 191950, rate: 0.24 },
+    { upTo: 243725, rate: 0.32 },
+    { upTo: 365600, rate: 0.35 },
+    { upTo: Infinity, rate: 0.37 }
+  ],
+  hoh: [
+    { upTo: 16550, rate: 0.10 },
+    { upTo: 63100, rate: 0.12 },
+    { upTo: 100500, rate: 0.22 },
+    { upTo: 191950, rate: 0.24 },
+    { upTo: 243700, rate: 0.32 },
+    { upTo: 609350, rate: 0.35 },
+    { upTo: Infinity, rate: 0.37 }
+  ]
+};
+
+function bracketForTaxable(filing, taxable){
+  const list = brackets2024[filing] || brackets2024.single;
+  for (const b of list){
+    if (taxable <= b.upTo) return b.rate;
+  }
+  return list[list.length-1].rate;
+}
+
+function wireBracket(){
+  const filing = document.getElementById("filing").value;
+  const ti = Number(document.getElementById("taxableIncome").value || 0);
+  if (ti <= 0){
+    document.getElementById("bracketOut").textContent = "—";
+    return;
+  }
+  const rate = bracketForTaxable(filing, ti);
+  document.getElementById("bracketOut").textContent = `Marginal bracket: ${(rate*100).toFixed(0)}%`;
+}
+document.getElementById("filing").addEventListener("change", wireBracket);
+document.getElementById("taxableIncome").addEventListener("input", wireBracket);
+
+/** ---------------------------
+ *  5) NOTES (localStorage)
+ *  ---------------------------
+ */
+const notesEl = document.getElementById("notes");
+const notesStatus = document.getElementById("notesStatus");
+
+function loadNotes(){
+  return localStorage.getItem("workDashboardNotes") || "";
+}
+function saveNotes(v){
+  localStorage.setItem("workDashboardNotes", v);
+}
+notesEl.value = loadNotes();
+
+document.getElementById("saveNotesBtn").addEventListener("click", ()=>{
+  saveNotes(notesEl.value);
+  notesStatus.textContent = "Saved.";
+});
+document.getElementById("clearNotesBtn").addEventListener("click", ()=>{
+  notesEl.value = "";
+  saveNotes("");
+  notesStatus.textContent = "Cleared.";
+});
+
+/** initial render + init quick math defaults */
+render();
+renderBpTiers();
+wireFeeCalc();
+calcBp();
+wireBracket();
+</script>
+
+</body>
+</html>
+
+
+
+
+
